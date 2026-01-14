@@ -3,27 +3,30 @@ import config from '../configs/config.mongodb.js'
 
 const { url } = config.db.host
 
-const connectString = url
-
 class Database {
   constructor() {
     this.connect()
   }
 
-  connect(type = 'mongodb') {
-    // Bật debug khi ở môi trường development
-    // if (process.env.NODE_ENV !== 'production') {
+  async connect(type = 'mongodb') {
     if (1 === 1) {
       mongoose.set('debug', true)
       mongoose.set('debug', { color: true })
     }
 
-    mongoose
-      .connect(connectString, {
-        maxPoolSize: 50 // Kinh nghiệm: Nên giới hạn pool size cho hệ thống ERP/Enterprise
-      })
-      .then((_) => console.log('Connected MongoDB Success PRO'))
-      .catch((err) => console.log(`Error Connect: ${err}`))
+    // mongoose
+    //   .connect(url, {
+    //     maxPoolSize: 50 // Kinh nghiệm: Nên giới hạn pool size cho hệ thống ERP/Enterprise
+    //   })
+    //   .then((_) => console.log('Connected MongoDB Success'))
+    //   .catch((err) => console.log(`Error Connect: ${err}`))
+
+    try {
+      const conn = await mongoose.connect(url)
+      console.log(`MongoDB connected: ${conn.connection.host}`)
+    } catch (error) {
+      console.log('MongoDB connection error:', error)
+    }
   }
 
   static getInstance() {

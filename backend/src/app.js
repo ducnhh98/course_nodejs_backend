@@ -3,6 +3,7 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import compression from 'compression'
 import { checkOverload } from './helpers/check.connect.js'
+import router from './routers/index.js'
 
 const app = express()
 
@@ -11,6 +12,9 @@ app.use(morgan('dev'))
 app.use(helmet())
 app.use(compression())
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
 // init db
 import instanceMongoDB from './dbs/init.mongodb.js'
 // KHÔNG GỌI instanceMongoDB() vì nó là một object, không phải function.
@@ -18,14 +22,7 @@ import instanceMongoDB from './dbs/init.mongodb.js'
 // checkOverload()
 
 // init router
-app.get('/', (req, res, next) => {
-  const strCompress = 'Hello World'
-
-  return res.status(200).json({
-    message: 'Welcome',
-    metadata: strCompress.repeat(1000)
-  })
-})
+app.use('/', router)
 
 // handling error
 

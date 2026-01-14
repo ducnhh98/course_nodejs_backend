@@ -7,7 +7,7 @@ const { port } = config.app
 const PORT = port || 3055
 
 const server = app.listen(PORT, () => {
-  console.log(`WSV eCommerce start with ${PORT}`)
+  console.log(`eCommerce running on  http://localhost:${PORT}`)
 })
 
 // Khi nhấn Ctrl + C
