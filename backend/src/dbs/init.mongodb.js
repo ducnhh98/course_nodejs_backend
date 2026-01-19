@@ -9,17 +9,10 @@ class Database {
   }
 
   async connect(type = 'mongodb') {
-    if (1 === 1) {
-      mongoose.set('debug', true)
-      mongoose.set('debug', { color: true })
-    }
-
-    // mongoose
-    //   .connect(url, {
-    //     maxPoolSize: 50 // Kinh nghiệm: Nên giới hạn pool size cho hệ thống ERP/Enterprise
-    //   })
-    //   .then((_) => console.log('Connected MongoDB Success'))
-    //   .catch((err) => console.log(`Error Connect: ${err}`))
+    // if (1 === 1) {
+    //   mongoose.set('debug', true)
+    //   mongoose.set('debug', { color: true })
+    // }
 
     try {
       const conn = await mongoose.connect(url)

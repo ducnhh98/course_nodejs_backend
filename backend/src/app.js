@@ -24,6 +24,23 @@ import instanceMongoDB from './dbs/init.mongodb.js'
 // init router
 app.use('/', router)
 
-// handling error
+// Khối này chỉ được gọi khi KHÔNG CÓ router nào phía trên nó khớp với URL mà người dùng yêu cầu.
+app.use((req, res, next) => {
+  const error = new Error('Not Found')
+  error.status = 404
+  next(error) // ==> next(error) là một tín hiệu đặc biệt. Khi bạn truyền một cái gì đó vào hàm next(), Express sẽ bỏ qua tất cả các middleware thông thường khác và bay thẳng đến Middleware xử lý lỗi (cái có 4 tham số ở dưới).
+})
+
+//Xử lý HandlerError
+app.use((error, req, res, next) => {
+  // Nếu không thấy lỗi nào thì mặc định là 500 => Lỗi server
+  const statusCode = error.status || 500 // Đây là status code của HTTP
+
+  return res.status(statusCode).json({
+    status: 'error',
+    code: statusCode, // code ở đây ta tự định nghĩa
+    message: error.message || 'Internal Server Error'
+  })
+})
 
 export default app

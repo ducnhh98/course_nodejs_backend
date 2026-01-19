@@ -1,7 +1,33 @@
 import keyTokenModel from '../models/keytoken.model.js'
+import { Types } from 'mongoose'
 
 class KeyTokenService {
-  static createKeyToken = async ({ userId, publicKey, privateKey }) => {
+  static createKeyToken = async ({
+    userId,
+    publicKey,
+    privateKey,
+    refreshToken
+  }) => {
+    const filter = { user: userId },
+      update = { publicKey, privateKey, refreshTokensUsed: [], refreshToken },
+      options = { upsert: true, new: true }
+
+    const tokens = await keyTokenModel.findOneAndUpdate(filter, update, options)
+
+    return tokens ? tokens.publicKey : null
+  }
+
+  static findByUserId = async (userId) => {
+    return await keyTokenModel
+      .findOne({ user: new Types.ObjectId(userId) })
+      .lean()
+  }
+
+  static removeKeyById = async (id) => {
+    return await keyTokenModel.deleteOne(id)
+  }
+
+  static createKeyTokenLowLevel = async ({ userId, publicKey, privateKey }) => {
     try {
       const tokens = await keyTokenModel.create({
         user: userId,
@@ -12,7 +38,7 @@ class KeyTokenService {
       return tokens ? tokens.publicKey : null
     } catch (error) {
       console.error('KeyTokenService Error:', error)
-      return null // Trả về null để AccessService biết là đã thất bại
+      return error
     }
   }
 
